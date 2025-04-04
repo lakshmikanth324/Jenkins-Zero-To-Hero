@@ -38,7 +38,9 @@ pipeline {
       steps {
         script {
             sh "cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} ."
-            
+            docker.image('lkmrinfo/maven-lakshmikanth-docker-agent:v2').inside('-u root --entrypoint=tail') {
+    sh '-f /dev/null'
+}
             docker.withRegistry('https://index.docker.io/v2/', "docker-cred") {
                 dockerImage.push()
             }
