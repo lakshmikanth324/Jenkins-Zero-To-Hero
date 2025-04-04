@@ -1,7 +1,7 @@
 pipeline {
   agent {
     docker {
-      image 'lkmrinfo/maven-lakshmikanth-docker-agent:v2'
+      image 'lkmrinfo/maven-lakshmikanth-docker-agent:v3'
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
@@ -31,14 +31,14 @@ pipeline {
     }
     stage('Build and Push Docker Image') {
       environment {
-        DOCKER_IMAGE = "lkmrinfo/maven-lakshmikanth-docker-agent:v2"
+        DOCKER_IMAGE = "lkmrinfo/maven-lakshmikanth-docker-agent:v3"
         // DOCKERFILE_LOCATION = "java-maven-sonar-argocd-helm-k8s/spring-boot-app/Dockerfile"
         REGISTRY_CREDENTIALS = credentials('docker-cred')
       }
       steps {
         script {
             sh "cd java-maven-sonar-argocd-helm-k8s/spring-boot-app && docker build -t ${DOCKER_IMAGE} ."
-            docker.image('lkmrinfo/maven-lakshmikanth-docker-agent:v2').inside('-u root --entrypoint=tail') {
+            docker.image('lkmrinfo/maven-lakshmikanth-docker-agent:v3').inside('-u root --entrypoint=tail') {
     sh '-f /dev/null'
 }
             docker.withRegistry('https://index.docker.io/v2/', "docker-cred") {
